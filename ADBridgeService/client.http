@@ -1,0 +1,6 @@
+@bridge = localhost:5000
+###
+GET http://{{bridge}}/api/passwords/expirationDate?account=AC
+
+###
+GET http://{{bridge}}/api/passwords/expirationDate?account=AlexeiS
