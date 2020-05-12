@@ -42,6 +42,12 @@ namespace ADClient
             return builder.BuildCheckedOrThrow(appConfiguration);
         }
 
+        public static ADConnectionConfig FromConfigurationForDomainOrThrow(IConfiguration appConfiguration, string domain)
+        {
+            var builder = new ConnectionConfigBuilder();
+            return builder.BuildCheckedForDomainOrThrow(appConfiguration, domain);
+        }
+
         /// <summary>
         /// Признак использования хранилища SAM (на локальной машине или машине с заданным именем)
         /// </summary>

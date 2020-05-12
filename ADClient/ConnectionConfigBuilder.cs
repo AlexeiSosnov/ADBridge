@@ -19,6 +19,33 @@ namespace ADClient
             return config;
         }
 
+        /// <summary>
+        /// Получает конфигурацию подключения по названию домена. Подсекция конфигурации в DomainConnections 
+        /// должна совпадать по названию с названием домена (вплоть до реестра), переменные окружения должны включить название домена
+        /// </summary>
+        internal ADConnectionConfig BuildCheckedForDomainOrThrow(IConfiguration appConfiguration, string domain)
+        {
+            var config = new ADConnectionConfig();
+            config.Domain = GetDomainStringValue("Domain");
+            config.DcAddress = GetDomainStringValue("DcAddress");
+            config.DcUserName = GetDomainStringValue("DcUserName");
+            config.DcPassword = GetDomainStringValue("DcPassword");
+            config.UsersContainer = GetDomainStringValue("UsersContainer");
+
+            CheckConnectionConfigOrThrow(config);
+            return config;
+
+            string GetDomainStringValue(string key)
+            {
+                return appConfiguration.GetValue<string>(GetDomainConfigKey(key));
+            }
+
+            string GetDomainConfigKey(string key)
+            {
+                return string.Format("DomainConnections:{0}:{1}", domain, key);
+            }
+        }
+
         internal void CheckConnectionConfigOrThrow(ADConnectionConfig config)
         {
             if (config == null)

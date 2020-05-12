@@ -30,11 +30,12 @@ namespace ADBridgeService.AppServices
 
             try
             {
-                var connectionConfig = ADConnectionConfig.FromConfigurationOrThrow(this.appConfiguration);
+                var userInDomain = UserInDomain.FromAccount(userDomainAccount);
+                var connectionConfig = userInDomain.GetADContainerConnectionConfigOrThrow(this.appConfiguration);
                 LogBeginGetPasswordDetails(userDomainAccount, connectionConfig);
 
                 using var usersRepository = this.adStore.NewUsersRepositoryOrThrow(connectionConfig);
-                var userWithPassword = usersRepository.GetUserPasswordDetails(userDomainAccount);
+                var userWithPassword = usersRepository.GetUserPasswordDetails(userInDomain.GetUsername());
                 if (userWithPassword == null)
                 {
                     LogUserNotFound(userDomainAccount, connectionConfig);
